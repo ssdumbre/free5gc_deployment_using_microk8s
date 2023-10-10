@@ -36,32 +36,47 @@ sudo chown -f -R <userid_using_microk8s> ~/.kube
 7. Install the command line tool for microk8s i.e., nothing but kubectl with the help of following commands:
 
 curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+
 chmod +x kubectl
+
 sudo mv kubectl /usr/local/bin/
 
 8. Install helm (The Package Manager to install free5gc helm chart for the ue , access and core network) with the help of following commands:
 
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+
 chmod 700 get_helm.sh
+
 ./get_helm.sh
 
 9. Start a single-node cluster and enable Multus-CNI
 
 microk8s disable ha-cluster --force
+
 microk8s enable dns ingress dashboard storage community helm3
+
 microk8s enable multus
 
 10. Add & pull the repositories of free5gc & ueramsim using below Helm Commands :
+
 cd /root/ ; mkdir kubedata
+
 mkdir /root/5gc ; cd /root/5gc
+
 helm repo add towards5gs 'https://raw.githubusercontent.com/Orange-OpenSource/towards5gs-helm/main/repo/'
+
 helm repo update
+
 helm search repo
+
 helm pull towards5gs/free5gc; helm pull towards5gs/ueransim
 
 11. Create a persistent volume : 
+
 cd /root/5gc/
+
 vi pv.yaml
+
 ---------
 apiVersion: v1
 kind: PersistentVolume
@@ -86,7 +101,7 @@ spec:
           values:
           - <nodename>
 
-13. Check the physical network interface on Kubernetes node & if the names of network interfaces are different from eth0 and eth1 then we will have to apply the Networks configuration as mentioned on https://github.com/Orange-OpenSource/towards5gs-helm/tree/main/charts/free5gc#networks-configuration
+13. Check the physical network interface on Kubernetes node & if the names of network interfaces are different from eth0 and eth1 then we will have to apply the Networks configuration as mentioned on (https://github.com/Orange-OpenSource/towards5gs-helm/tree/main/charts/free5gc#networks-configuration)
 
 Use ip addr command to check the physical network interface
 
@@ -124,16 +139,8 @@ Deploy the Helm chart for free5GC’s core network components as given below :
 a. Create a namespace for free5gc:
 
 root@______:~/5gc# microk8s kubectl create ns free5gc
-namespace/free5gc created
 
 root@______:~/5gc# microk8s kubectl get ns -n --all
-NAME              STATUS   AGE
-default           Active   59m
-free5gc           Active   5s
-ingress           Active   59m
-kube-node-lease   Active   59m
-kube-public       Active   59m
-kube-system       Active   59m
 
 b. Deploy the helm chart using following command: 
 
@@ -142,27 +149,6 @@ root@______:~/5gc# microk8s helm -n free5gc install free5gc-core towards5gs/free
 Check if the free5gc core network pods are up and running or not by using following command :
 
 root@______:# microk8s kubectl get pods --all-namespaces
-
-NAMESPACE     NAME                                                     READY   STATUS    RESTARTS   AGE
-free5gc       free5gc-core-free5gc-amf-amf-7b856846c9-mwmwl            1/1     Running   0          5m19s
-free5gc       free5gc-core-free5gc-ausf-ausf-7dd46c9fb7-qlk28          1/1     Running   0          5m20s
-free5gc       free5gc-core-free5gc-dbpython-dbpython-b6b587768-m7b67   1/1     Running   0          5m20s
-free5gc       free5gc-core-free5gc-nrf-nrf-94c56fb79-qcht9             1/1     Running   0          5m20s
-free5gc       free5gc-core-free5gc-nssf-nssf-545f9dc99c-b9rcs          1/1     Running   0          5m20s
-free5gc       free5gc-core-free5gc-pcf-pcf-57589b5c66-gtbq4            1/1     Running   0          5m19s
-free5gc       free5gc-core-free5gc-smf-smf-7cc7bd6b54-lz2r8            1/1     Running   0          5m20s
-free5gc       free5gc-core-free5gc-udm-udm-5d5497c6f4-wjvgr            1/1     Running   0          5m19s
-free5gc       free5gc-core-free5gc-udr-udr-ffb6dc48f-2djhw             1/1     Running   0          5m20s
-free5gc       free5gc-core-free5gc-upf-upf-795586f9b-dvx9n             1/1     Running   0          5m19s
-free5gc       free5gc-core-free5gc-webui-webui-5fbb96469-82lbg         1/1     Running   0          5m20s
-free5gc       mongodb-0                                                1/1     Running   0          5m19s
-ingress       nginx-ingress-microk8s-controller-mx59w                  1/1     Running   0          64m
-kube-system   coredns-7745f9f87f-8qj4j                                 1/1     Running   0          64m
-kube-system   dashboard-metrics-scraper-5cb4f4bb9c-4646p               1/1     Running   0          64m
-kube-system   hostpath-provisioner-58694c9f4b-7bjqh                    1/1     Running   0          64m
-kube-system   kube-multus-ds-cddtb                                     1/1     Running   0          64m
-kube-system   kubernetes-dashboard-fc86bcc89-kwgwv                     1/1     Running   0          64m
-kube-system   metrics-server-7747f8d66b-qdgzr                          1/1     Running   0          64m
 
 
 
