@@ -177,5 +177,6 @@ References:
 2. https://github.com/Orange-OpenSource/towards5gs-helm/tree/main/charts/free5gc#networks-configuration
 3. https://github.com/devopsjourney23/free5gcdemo/blob/master/README.md
 4. https://hackmd.io/@haidinhtuan/ryRuKdEI3
+5. https://medium.com/rahasak/deploying-5g-core-network-with-free5gc-kubernets-and-helm-charts-29741cea3922
 
 ***** Note : I would like to thank the github community to help me create open-source free5gc network with the help of Kubernetes *****
