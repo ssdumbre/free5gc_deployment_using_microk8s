@@ -1,5 +1,5 @@
 # free5gc_deployment_using_microk8s
-I have created this repository just to help the people who are trying to deploy the free5gc network using Kubernetes
+I have created this repository to help the people who are trying to deploy the free5gc network using Kubernetes.
 
 Step by step procedure to create free5gc network using Kubernetes
 
